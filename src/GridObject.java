@@ -25,9 +25,11 @@ abstract class GridObject implements Comparable<GridObject>{
     public void addHealth(int amount) {
         this.health += amount;
     }
+
     public int getHealth() { return this.health; }
 
     public int getLastUpdated() { return this.lastUpdated; }
+
     public void setLastUpdated(int update) { this.lastUpdated = update; }
 
     public boolean getGender() { return this.gender; }
@@ -42,19 +44,24 @@ abstract class GridObject implements Comparable<GridObject>{
 
     //This is here because it's the same for wolves and sheep
     public int findNullSpace(ArrayList<GridObject> options) {
-        if (options.contains(null)) {
-            ArrayList<Integer> nulls = new ArrayList<>(0);
-            for (int i = 0; i < options.size(); i ++) {
-                if (options.get(i) == null) {
-                    nulls.add(i);
-                }
-            }
-            Collections.shuffle(nulls);
-            return nulls.get(0);
-        } else {
-            //Give up and don't move
-            return -1;
-        }
+        //TODO: Instead of this hacky for loop, you can use https://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html#indexOf(java.lang.Object)
+        // indexOf will give you the first index that an item exists, or -1 if it doesn't. So, using this awesome arraylist method,
+        // this thing becomes a one liner.
+        return options.indexOf(null);
+
+//        if (options.contains(null)) {
+//            ArrayList<Integer> nulls = new ArrayList<>(0);
+//            for (int i = 0; i < options.size(); i ++) {
+//                if (options.get(i) == null) {
+//                    nulls.add(i);
+//                }
+//            }
+//            Collections.shuffle(nulls);
+//            return nulls.get(0);
+//        } else {
+//            //Give up and don't move
+//            return -1;
+//        }
     }
 
     abstract int findTarget(ArrayList<GridObject> options);
