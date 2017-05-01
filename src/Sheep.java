@@ -7,6 +7,8 @@
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
+
 
 public class Sheep extends GridObject {
 
@@ -26,7 +28,7 @@ public class Sheep extends GridObject {
 
     public int findTarget(ArrayList<GridObject> options) {
 
-        ArrayList<GridObject> newOptions = (ArrayList)options.clone();
+        ArrayList<GridObject> newOptions = (ArrayList) options.clone();
 
         //Shuffle the array to make sure we don't create a tendency to move in a particular direction
         Collections.shuffle(newOptions);
@@ -74,5 +76,6 @@ public class Sheep extends GridObject {
             return firstPlant;
         } else {
             return super.findNullSpace(options);
+        }
     }
 }

@@ -7,6 +7,7 @@
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class Wolf extends GridObject{
 
@@ -46,7 +47,7 @@ public class Wolf extends GridObject{
                     && super.getHealth() >= EcoSim.MIN_MATE_HEALTH) {
                 firstFemaleWolf = i;
                 break;
-            } else if (firstSheep == -1 && o instanceof sheep) {
+            } else if (firstSheep == -1 && o instanceof Sheep) {
                 firstSheep = i;
             } else if (firstMaleWolf == -1 && o instanceof Wolf && o.getGender() && super.getGender()) {
                 firstMaleWolf = i;
