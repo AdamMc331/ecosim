@@ -50,18 +50,19 @@ class DisplayGrid {
             setDoubleBuffered(true);
             g.setColor(Color.BLACK);
 
-            for (int i = 0; i < world[0].length; i++) {
-                for (int j = 0; j < world.length; j++) {
+            //NOTE: instead of i and j, use column and row.
+            for (int col = 0; col < world[0].length; col++) {
+                for (int row = 0; row < world.length; row++) {
 
                     //Grass background tile
-                    g.drawImage(grass, j * GridToScreenRatio, i * GridToScreenRatio, GridToScreenRatio, GridToScreenRatio, this);
+                    g.drawImage(grass, row * GridToScreenRatio, col * GridToScreenRatio, GridToScreenRatio, GridToScreenRatio, this);
 
                     // Values are pulled from docs here - https://docs.oracle.com/javase/7/docs/api/java/awt/Graphics.html#drawImage(java.awt.Image,%20int,%20int,%20int,%20int,%20java.awt.image.ImageObserver)
                     // Width and height are repeated, going against my original comment, but I would say that it is okay
                     // this way because it increases readability.
-                    GridObject gridObject = world[i][j];
-                    int xValue = j * GridToScreenRatio;
-                    int yValue = i * GridToScreenRatio;
+                    GridObject gridObject = world[col][row];
+                    int xValue = row * GridToScreenRatio;
+                    int yValue = col * GridToScreenRatio;
                     int width = GridToScreenRatio;
                     int height = GridToScreenRatio;
                     int smallWidth = width / 5;
