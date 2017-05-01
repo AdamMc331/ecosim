@@ -8,40 +8,31 @@
 import javax.swing.*;
 import java.awt.*;
 
-
 class DisplayGrid {
 
     private JFrame frame;
-
-    //TODO: Intellij should be telling you that maxX and maxY should be local variables. It's a good idea to do that
-    // because it prevents the same field from being modified in a different thread. Don't ignore these warnings.
-    // Also, use camelCase for gridToScreenRatio instead. This is a better Java convention.
-    private int maxX,maxY, GridToScreenRatio;
-
+    private int GridToScreenRatio;
     private GridObject[][] world;
 
     DisplayGrid(GridObject[][] w) {
         this.world = w;
 
-        maxX = Toolkit.getDefaultToolkit().getScreenSize().width;
-        maxY = Toolkit.getDefaultToolkit().getScreenSize().height;
+        int maxX = Toolkit.getDefaultToolkit().getScreenSize().width;
+        int maxY = Toolkit.getDefaultToolkit().getScreenSize().height;
+        GridToScreenRatio = maxY / (world.length + 1);  //ratio to fit in screen as square map
 
-        //TODO: Add some white space in between your plus symbols. Even though it's not required, it is a huge help
-        // for readability. As it is, this gives me a head ache.
-        GridToScreenRatio = maxY / (world.length+1);  //ratio to fit in screen as square map
-        System.out.println("Map size: "+world.length+" by "+world[0].length + "\nScreen size: "+ maxX +"x"+maxY+ " Ratio: " + GridToScreenRatio);
-
+        System.out.println("Map size: " + world.length + " by " + world[0].length + "\nScreen size: " + maxX + "x" + maxY + " Ratio: " + GridToScreenRatio);
         this.frame = new JFrame("Map of World");
 
         GridAreaPanel worldPanel = new GridAreaPanel();
 
         frame.getContentPane().add(BorderLayout.CENTER, worldPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         frame.setVisible(true);
     }
 
-    public void refresh() {
+    void refresh() {
         frame.repaint();
     }
 
@@ -59,39 +50,15 @@ class DisplayGrid {
             setDoubleBuffered(true);
             g.setColor(Color.BLACK);
 
-            //TODO: Make sure your brackets are consistent. This one was on the previous line.
-            //TODO: Same comment from above about white space.
-            //TODO: You're not wrong, but convention is usually i++ and j++;
-            for(int i = 0; i<world[0].length;i=i+1) {
-                for(int j = 0; j<world.length;j=j+1) {
+            for (int i = 0; i < world[0].length; i++) {
+                for (int j = 0; j < world.length; j++) {
 
                     //Grass background tile
                     g.drawImage(grass, j * GridToScreenRatio, i * GridToScreenRatio, GridToScreenRatio, GridToScreenRatio, this);
 
-                    //TODO: You had a lot of repeated code in your example below. Sometimes this is okay, but in this example
-                    // it would probably help a lot to define some variables you can reuse. I've commented your original code out
-                    // for comparison, and replaced it with my suggestions.
-//                    if (world[i][j] instanceof Sheep) {
-//                        g.drawImage(sheep, j * GridToScreenRatio, i * GridToScreenRatio, GridToScreenRatio, GridToScreenRatio, this);
-//                        if (world[i][j].getGender()) {
-//                            g.drawImage(maleIcon, j * GridToScreenRatio, i * GridToScreenRatio, GridToScreenRatio / 5, GridToScreenRatio / 5, this);
-//                        } else {
-//                            g.drawImage(femaleIcon, j * GridToScreenRatio, i * GridToScreenRatio, GridToScreenRatio / 5, GridToScreenRatio / 5, this);
-//                        }
-//                    } else if (world[i][j] instanceof Wolf) {
-//                        g.drawImage(wolf, j * GridToScreenRatio, i * GridToScreenRatio, GridToScreenRatio, GridToScreenRatio, this);
-//                        if (world[i][j].getGender()) {
-//                            g.drawImage(maleIcon, j * GridToScreenRatio, i * GridToScreenRatio, GridToScreenRatio / 5, GridToScreenRatio / 5, this);
-//                        } else {
-//                            g.drawImage(femaleIcon, j * GridToScreenRatio, i * GridToScreenRatio, GridToScreenRatio / 5, GridToScreenRatio / 5, this);
-//                        }
-//                    } else if (world[i][j] instanceof Plant) {
-//                        g.drawImage(plant, j * GridToScreenRatio, i * GridToScreenRatio, GridToScreenRatio, GridToScreenRatio, this);
-//                    }
-
                     // Values are pulled from docs here - https://docs.oracle.com/javase/7/docs/api/java/awt/Graphics.html#drawImage(java.awt.Image,%20int,%20int,%20int,%20int,%20java.awt.image.ImageObserver)
                     // Width and height are repeated, going against my original comment, but I would say that it is okay
-                    // this way because it increases readabilty.
+                    // this way because it increases readability.
                     GridObject gridObject = world[i][j];
                     int xValue = j * GridToScreenRatio;
                     int yValue = i * GridToScreenRatio;
@@ -121,12 +88,11 @@ class DisplayGrid {
                         g.drawImage(baseImage, xValue, yValue, width, height, this);
                     }
 
-                    if (genderImage!= null) {
+                    if (genderImage != null) {
                         g.drawImage(genderImage, xValue, yValue, smallWidth, smallHeight, this);
                     }
                 }
             }
         }
-    }//end of GridAreaPanel
-
-} //end of DisplayGrid
+    }
+}
