@@ -12,7 +12,11 @@ public class Wolf extends GridObject{
 
     Wolf() {
         super();
-        super.addHealth(50 + (int)(Math.random() * 51)); //Random health from 50-100 (inclusive)
+        //TODO: Use this SO answer for a better way to get a random number between two ints: http://stackoverflow.com/a/5887736/3131147
+        int min = 50;
+        int max = 100;
+        int health = new Random().nextInt((max - min) + 1) + min;
+        super.addHealth(health); //Random health from 50-100 (inclusive)
     }
 
     Wolf(int health) {
@@ -26,34 +30,37 @@ public class Wolf extends GridObject{
         //Shuffle the array to make sure we don't create a tendency to move in a particular direction
         Collections.shuffle(newOptions);
 
-        //Try to mate first, if the wolf is healthy enough for mating it's good on food for now
-        for (GridObject o : newOptions) {
-            if ( //Mate with an available wolf
-                    o instanceof Wolf &&
-                            o.getGender() != super.getGender() &&
-                            o.getHealth() >= EcoSim.MIN_MATE_HEALTH && super.getHealth() >= EcoSim.MIN_MATE_HEALTH
-                    ) {
-                return options.indexOf(o);
+        //TODO: See my comments in Sheep.java. You can replace all of these with one for loop.
+        int firstFemaleWolf = -1;
+        int firstSheep = -1;
+        int firstMaleWolf = -1;
+
+        for(int i = 0; i < newOptions.size(); i++) {
+            GridObject o = newOptions.get(i);
+
+            // Since firstOppositeWolf is the main thing we want to find, break if we find it.
+            if (firstFemaleWolf == -1
+                    && o instanceof Wolf
+                    && o.getGender() != super.getGender()
+                    && o.getHealth() >= EcoSim.MIN_MATE_HEALTH
+                    && super.getHealth() >= EcoSim.MIN_MATE_HEALTH) {
+                firstFemaleWolf = i;
+                break;
+            } else if (firstSheep == -1 && o instanceof sheep) {
+                firstSheep = i;
+            } else if (firstMaleWolf == -1 && o instanceof Wolf && o.getGender() && super.getGender()) {
+                firstMaleWolf = i;
             }
         }
 
-        //Next, try to eat a sheep
-        for (GridObject o : newOptions) {
-            if (o instanceof Sheep) {
-                return options.indexOf(o);
-            }
+        if (firstFemaleWolf >= 0) {
+            return firstFemaleWolf;
+        } else if (firstSheep >= 0) {
+            return firstSheep;
+        } else if (firstMaleWolf >= 0) {
+            return firstMaleWolf;
+        } else {
+            return super.findNullSpace(options);
         }
-
-        //Next, try to fight another male wolf
-        for (GridObject o : newOptions) {
-            if (o instanceof Wolf && o.getGender() && super.getGender()) {
-                return options.indexOf(o);
-            }
-        }
-
-        //Pick a random empty square and move to it
-        //We need a slightly different method of iteration here
-        //This is because options.indexOf(o) where o is null returns the first null value, as null cannot be unique
-        return super.findNullSpace(options);
     }
 }
